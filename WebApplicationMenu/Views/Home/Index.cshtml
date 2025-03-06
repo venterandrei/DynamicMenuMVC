@@ -1,0 +1,93 @@
+﻿@model List<MenuViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="">
+    <h1 class="display-5">Dynamic menu </h1>
+    <div class="row mt-2">
+        <div class="col-md-1"></div>
+        <div class="col-md-1">
+            <a href="#" onclick="clickLink('LEFT')" class="btn btn-primary" value="up">LEFT</a>
+
+        </div>
+        <div class="col-md-1">
+            <a href="#" onclick="clickLink('RIGHT')" class="btn btn-primary" value="down">RIGHT</a>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="newMenuText" aria-describedby="newMenu" placeholder="">
+                </div>
+                <div class="col-md-4">
+                    <a href="#" onclick="clickLink('NEW')" class="btn btn-primary" value="down">ADD</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+
+        <div class="col-md-6">
+            <div id="menus">
+                @await Html.PartialAsync("_PartialMenu", Model)
+            </div>
+
+        </div>
+        <div class="col-md-2">
+            <div class="row" style="margin-top:300px;">
+                <a href="#" onclick="clickLink('UP')" class="btn btn-primary" value="up">UP</a>
+            </div>
+            <div class="row mt-1">
+                <a href="#" onclick="clickLink('DOWN')" class="btn btn-primary" value="down">Down</a>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col col-md-2 offset-6">
+            <a href="#" onclick="clickLink('DELETE')" class="btn btn-primary" role="button">DELETE</a>
+        </div>
+    </div>
+
+</div>
+<script>
+    var selectedId = 0;
+    function clickSelect(id) {
+        // alert(name);
+        $.ajax({
+            url: '/Home/GetSelectPartialView',
+            type: 'POST',
+            cache: false,
+            data: { id: id },
+            success: function (result) {
+                $('#menus').html(result);
+                selectedId = id;
+            }
+        });
+    }
+
+    function clickLink(name, hasParent, id) {
+        if (selectedId == 0) {
+            alert("Please select an item");
+        }
+        var newMenu = $('#newMenuText').val();
+        if (name === "NEW") {
+            if (newMenu === undefined || newMenu === "")
+                alert("Please write a menu name");
+        }
+        //
+        $.ajax({
+            url: '/Home/GetPartialView',
+            type: 'POST',
+            cache: false,
+            data: { name: name, hasParent: hasParent, id: selectedId, newMenu },
+            success: function (result) {
+                $('#menus').html(result);
+                $('#newMenuText').val("");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,51 @@
+﻿@model List<MenuViewModel>
+@using Microsoft.AspNetCore.Html;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="">
+
+    <nav class="d-none d-xl-block col-xl-2 bd-toc">
+        <nav>
+            @foreach (var item in Model)
+            {
+                <ul style="list-style-type: none;margin-bottom: 0px;">
+                    <li style="min-width:250px;">
+                        @RenderName(item)
+                    </li>
+                </ul>
+            }
+        </nav>
+    </nav>
+
+
+</div>
+
+@{
+    HtmlString RenderName(MenuViewModel element)
+    {
+        @if (element.Selected == true)
+        {
+            <a href="#" style="color:red;" onclick="clickSelect('@element.Id')"><i class="fa fa-arrow-circle-right"></i>@element.Name</a>
+        }
+        else
+        {
+            <a href="#" onclick="clickSelect('@element.Id')"><i class="fa fa-arrow-circle-right"></i>@element.Name</a>
+        }
+        @if (element.Items.Count > 0)
+        {
+            <ul style="list-style-type: none;margin-bottom: 0px;">
+                @foreach (var item in element.Items)
+                {
+                    <li style="min-width:250px;">
+                        @RenderName(item)
+                    </li>
+                }
+            </ul>
+        }
+        return new HtmlString("");
+    }
+
+
+}
